@@ -98,16 +98,6 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'railway',
-#         'USER': 'postgres',
-#         'PASSWORD': 'kGCmUiLmEFCnagsgPWMRtmtYiwtkwmrV',
-#         'HOST': 'metro.proxy.rlwy.net',  # Or your MySQL server's IP address
-#         'PORT': 33396,       # Default MySQL port metro.proxy.rlwy.net:33396
-#     }
-# }
 
 # DATABASES = {
 #     "default": dj_database_url.config(
