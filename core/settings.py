@@ -1,19 +1,27 @@
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+import dj_database_url
+
+load_dotenv() # take environment variables from .env.
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from .env file
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_7mupsjs1m$d7eat_#@_s&diy26y$sgw4n1bj+r9j_8@4$psh0'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app', '.now.sh', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -34,6 +42,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -66,13 +75,49 @@ AUTH_USER_MODEL = "account.User"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': os.getenv("SUPA_NAME"),
+#         'USER': os.getenv("SUPA_USER"),
+#         'PASSWORD': os.getenv("SUPA_PASS"),
+#         'HOST': os.getenv("SUPA_HOST"),  # Or your MySQL server's IP address
+#         'PORT': os.getenv("SUPA_PORT"),       # Default MySQL port
+#     }
+# }
+# print(f"Database connection: {os.getenv('SUPA_POSTGRES_URL')}")
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("RAIL_DB_NAME"),
+        'USER': os.getenv("RAIL_USER"),
+        'PASSWORD': os.getenv("RAIL_PASS"),
+        'HOST': os.getenv("RAIL_HOST"),  # Or your MySQL server's IP address
+        'PORT': os.getenv("RAIL_PORT"),       # Default MySQL port
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'railway',
+#         'USER': 'postgres',
+#         'PASSWORD': 'kGCmUiLmEFCnagsgPWMRtmtYiwtkwmrV',
+#         'HOST': 'metro.proxy.rlwy.net',  # Or your MySQL server's IP address
+#         'PORT': 33396,       # Default MySQL port metro.proxy.rlwy.net:33396
+#     }
+# }
+
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default=os.getenv(
+#             "SUPA_POSTGRES_URL",
+#             default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+#         ),
+#         conn_max_age=600,
+#     )
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -108,7 +153,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STORAGES = {
+#     "staticfiles": {
+#         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+#     },
+# }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

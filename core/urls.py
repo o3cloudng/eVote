@@ -5,12 +5,14 @@ from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from debug_toolbar.toolbar import debug_toolbar_urls
+from account.views import userlogin
 
 admin.autodiscover()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include("account.urls")),
+    path('', userlogin, name="login"),
 ] + debug_toolbar_urls()
 
 
