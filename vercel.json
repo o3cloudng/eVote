@@ -1,10 +1,20 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
   "builds": [
     {
-      "src": "core/wsgi.py", 
+      "src": "core/wsgi.py",
       "use": "@vercel/python",
-      "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" } 
+      "config": {
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.9"
+      }
+    },
+    {
+      "src": "build_files.sh",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "staticfiles_build"
+      }
     }
   ],
   "routes": [
@@ -14,8 +24,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "core/wsgi.py" 
+      "dest": "core/wsgi.py"
     }
-  ],
-  "buildCommand": "./build_files.sh" 
+  ]
 }
