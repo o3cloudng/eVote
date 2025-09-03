@@ -3,7 +3,7 @@ from account.views import userlogin, signup, forgot_password, dashboard, profile
 
 urlpatterns = [
     # path('login/', userlogin, name="login"),
-    path('signup/', signup, name="register"),
+    path('signup/', signup, name="signup"),
     path('forgot_password/', forgot_password, name="forgot_password"),
     path('dashboard/', dashboard, name="dashboard"),
     path('profile/', profile, name="profile"),

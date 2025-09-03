@@ -1,0 +1,34 @@
+<aside 
+  class="bg-blue-800 text-white h-screen w-64 space-y-6 py-6 px-4 
+         fixed md:relative inset-y-0 left-0 transform transition-transform duration-300 ease-in-out z-40
+         -translate-x-full md:translate-x-0"
+  :class="{'translate-x-0': sidebarOpen}"
+>
+  <!-- Logo / Title -->
+  <div class="flex items-center justify-between">
+    <span class="text-xl font-bold">O-ORBDA</span>
+
+    <!-- Collapse button (only mobile) -->
+    <button @click="sidebarOpen = false" class="md:hidden text-white focus:outline-none">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Navigation Links -->
+  <nav class="mt-6 space-y-2">
+    <a href="{% url 'dashboard' %}" class="flex items-center py-2 px-4 rounded hover:bg-blue-700 transition">
+      <span class="mr-2">🏠</span> Dashboard
+    </a>
+    <a href="{% url 'dashboard' %}" class="flex items-center py-2 px-4 rounded hover:bg-blue-700 transition">
+      <span class="mr-2">📁</span> Budget
+    </a>
+    <a href="{% url 'dashboard' %}" class="flex items-center py-2 px-4 rounded hover:bg-blue-700 transition">
+      <span class="mr-2">💰</span> Payment Register
+    </a>
+    <a href="{% url 'dashboard' %}" class="flex items-center py-2 px-4 rounded hover:bg-blue-700 transition">
+      <span class="mr-2">📄</span> Statements
+    </a>
+  </nav>
+</aside>
