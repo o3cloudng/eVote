@@ -1,0 +1,163 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<main class="flex-1 p-6 md:p-8">
+  <!-- Top navigation -->
+  {% with head="Dashboard" short_message="Welcome back — here's what's happening." %}
+    {% include "header.html" %}
+  {% endwith %}
+
+  <!-- Dashboard grid -->
+  <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+
+    <!-- Cards -->
+    <div class="col-span-1 lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div class="bg-white p-5 rounded-2xl shadow-sm border">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Total Users</p>
+            <h3 class="text-2xl font-semibold">1,248</h3>
+            <p class="text-xs text-gray-400 mt-1">+3.5% since last week</p>
+          </div>
+          <div class="bg-green-50 p-3 rounded-lg">
+            <svg class="h-7 w-7 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M3 13h8V3H3v10zM3 21h8v-6H3v6zM13 21h8V11h-8v10zM13 3v6h8V3h-8z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow-sm border">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">New Signups</p>
+            <h3 class="text-2xl font-semibold">76</h3>
+            <p class="text-xs text-gray-400 mt-1">+8 from yesterday</p>
+          </div>
+          <div class="bg-green-50 p-3 rounded-lg">
+            <svg class="h-7 w-7 text-green-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 2l3.5 7.5L23 10l-6 5 1.5 8L12 19l-6.5 4L7 15 1 10l7.5-0.5L12 2z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow-sm border">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Active Agents</p>
+            <h3 class="text-2xl font-semibold">312</h3>
+            <p class="text-xs text-gray-400 mt-1">Stability: good</p>
+          </div>
+          <div class="bg-yellow-50 p-3 rounded-lg">
+            <svg class="h-7 w-7 text-yellow-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 8v4l3 3" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl shadow-sm border">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-500">Revenue</p>
+            <h3 class="text-2xl font-semibold">$18,920</h3>
+            <p class="text-xs text-gray-400 mt-1">+12% month over month</p>
+          </div>
+          <div class="bg-red-50 p-3 rounded-lg">
+            <svg class="h-7 w-7 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M12 8v4l3 3" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right column summary -->
+    <div class="bg-white p-5 rounded-2xl shadow-sm border">
+      <h4 class="text-sm font-semibold text-gray-600 mb-3">Quick Summary</h4>
+      <ul class="space-y-3">
+        <li class="flex items-center justify-between">
+          <div class="text-sm">Open tickets</div>
+          <div class="text-sm font-semibold">24</div>
+        </li>
+        <li class="flex items-center justify-between">
+          <div class="text-sm">Pending approvals</div>
+          <div class="text-sm font-semibold">8</div>
+        </li>
+        <li class="flex items-center justify-between">
+          <div class="text-sm">Server status</div>
+          <div class="text-sm font-semibold text-green-600">Online</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Table section -->
+  <section class="bg-white p-6 rounded-2xl shadow-sm border">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold">Recent Users</h3>
+      <div class="flex items-center gap-3">
+        <input type="text" placeholder="Filter by name or email"
+          class="px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-green-500">
+        <button class="px-3 py-2 bg-green-600 text-white rounded-lg">Export</button>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+            <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-100">
+          {% for u in users %}
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-4 whitespace-nowrap">
+              <div class="flex items-center gap-3">
+                <img src="{% static 'images/avatar-placeholder.png' %}" alt="" class="h-8 w-8 rounded-full">
+                <div>
+                  <div class="text-sm font-medium">{{ u.get_full_name|default:u.email }}</div>
+                  <div class="text-xs text-gray-400">{{ u.profile.title|default:"-" }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-4 text-sm text-gray-600">{{ u.email }}</td>
+            <td class="px-4 py-4 text-sm text-gray-600">{{ u.role }}</td>
+            <td class="px-4 py-4 text-sm text-gray-600">{{ u.date_joined|date:"M d, Y" }}</td>
+            <td class="px-4 py-4 text-right text-sm">
+              <a href="{% url 'user_detail' u.id %}" class="px-3 py-1 rounded-md border text-sm">View</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="px-4 py-6 text-center text-sm text-gray-500">No users found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- simple pagination placeholder -->
+    <div class="mt-4 flex items-center justify-between">
+      <div class="text-sm text-gray-600">Showing {{ users.start_index }} - {{ users.end_index }} of {{
+        users.paginator.count }}</div>
+      <div class="flex items-center gap-2">
+        {% if users.has_previous %}
+        <a href="?page={{ users.previous_page_number }}" class="px-3 py-1 border rounded-md">Previous</a>
+        {% endif %}
+        {% if users.has_next %}
+        <a href="?page={{ users.next_page_number }}" class="px-3 py-1 border rounded-md">Next</a>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+</main>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% load static %}
+<header class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-4">
+      <button @click="sidebarOpen = !sidebarOpen" class="md:hidden p-2 rounded-md hover:bg-white">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <h2 class="text-2xl font-semibold">
+        {{ head }}
+    </h2>
+      <p class="text-sm text-gray-500">{{ short_message }}</p>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <!-- Search -->
+      <div class="relative hidden md:block">
+        <input type="text" placeholder="Search..."
+          class="pl-10 pr-4 py-2 rounded-lg border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-green-500">
+        <div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M11 19a8 8 0 100-16 8 8 0 000 16z" />
+            <path d="M21 21l-4.35-4.35" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <button class="p-2 rounded-md hover:bg-white">
+        <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5" />
+        </svg>
+      </button>
+
+      <!-- Avatar dropdown (simple) -->
+      <div x-data="{ open: false }" class="relative">
+        <button @click="open = !open" class="flex items-center gap-2 rounded-full p-1 hover:bg-white">
+          <img src="{% static 'profile/profile.jpg' %}" alt="avatar" class="h-8 w-8 rounded-full">
+        </button>
+
+        <div x-show="open" @click.outside="open = false" x-transition
+          class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border">
+          <a href="{% url 'profile' %}" class="block px-4 py-2 text-sm hover:bg-gray-50">Profile</a>
+          <a href="{% url 'settings' %}" class="block px-4 py-2 text-sm hover:bg-gray-50">Settings</a>
+          <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            <button type="submit" class="w-full text-left px-4 py-2 text-sm hover:bg-gray-50">Logout</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </header>

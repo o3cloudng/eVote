@@ -73,7 +73,7 @@ def forgot_password(request):
     return render(request, 'account/forgot_password.html')
 
 def dashboard(request):
-    return render(request, 'account/dashboard.html')
+    return render(request, 'users/dashboard.html')
 
 def logout_user(request):
     logout(request)
@@ -93,6 +93,11 @@ def reports(request):
 
 def logout(request):
     pass
+
+
+def budget(request):
+    return render(request, 'users/budget.html')
+
 
 
 # @login_required

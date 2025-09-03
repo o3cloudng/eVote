@@ -1,0 +1,143 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}Budget{% endblock %}
+{% block head %}Budget{% endblock %}
+{% block content %}
+<!-- Overlay for mobile -->
+<div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 bg-black/30 z-30 md:hidden"></div>
+
+<!-- Main content -->
+<main class="flex-1 p-6 md:p-8">
+  {% with head="Budget" short_message="Welcome back — here's what's happening." %}
+    {% include "header.html" %}
+  {% endwith %}
+
+  <!-- Header -->
+  <!-- <header class="bg-blue-900 text-white py-4 px-6 mb-6 shadow">
+      <h1 class="text-xl md:text-2xl font-semibold text-center">
+        OGUN-OSHUN RIVER BASIN DEVELOPMENT AUTHORITY <br>
+        2024 BUDGET PERFORMANCE
+      </h1>
+    </header> -->
+
+  <!-- Back button -->
+  <a href="../navigation/Budget.html"
+    class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded-md mb-4">
+    ← Back
+  </a>
+
+  <!-- Top menu bar -->
+  <div class="flex flex-wrap gap-2 bg-blue-800 text-white px-4 py-2 rounded-md shadow mb-4">
+    <div class="relative group">
+      <button class="px-3 py-1 bg-blue-700 rounded hover:bg-blue-600">File</button>
+      <div class="hidden absolute group-hover:block bg-white text-gray-700 mt-1 rounded shadow-md w-40 z-10">
+        <button onclick="window.print()" class="w-full text-left px-4 py-2 hover:bg-gray-100">Print</button>
+        <button onclick="exportToExcel()" class="w-full text-left px-4 py-2 hover:bg-gray-100">Export to Excel</button>
+      </div>
+    </div>
+    <div class="relative group">
+      <button class="px-3 py-1 bg-blue-700 rounded hover:bg-blue-600">Edit</button>
+      <div class="hidden absolute group-hover:block bg-white text-gray-700 mt-1 rounded shadow-md w-40 z-10">
+        <button onclick="alert('Undo')" class="w-full px-4 py-2 hover:bg-gray-100">Undo</button>
+        <button onclick="alert('Redo')" class="w-full px-4 py-2 hover:bg-gray-100">Redo</button>
+        <button onclick="alert('Cut')" class="w-full px-4 py-2 hover:bg-gray-100">Cut</button>
+        <button onclick="alert('Copy')" class="w-full px-4 py-2 hover:bg-gray-100">Copy</button>
+        <button onclick="alert('Paste')" class="w-full px-4 py-2 hover:bg-gray-100">Paste</button>
+        <button onclick="alert('Delete')" class="w-full px-4 py-2 hover:bg-gray-100">Delete</button>
+      </div>
+    </div>
+    <div class="relative group">
+      <button class="px-3 py-1 bg-blue-700 rounded hover:bg-blue-600">View</button>
+      <div class="hidden absolute group-hover:block bg-white text-gray-700 mt-1 rounded shadow-md w-40 z-10">
+        <button onclick="alert('Toggle Filters')" class="w-full px-4 py-2 hover:bg-gray-100">Toggle Filters</button>
+        <button onclick="alert('Zoom In')" class="w-full px-4 py-2 hover:bg-gray-100">Zoom In</button>
+        <button onclick="alert('Zoom Out')" class="w-full px-4 py-2 hover:bg-gray-100">Zoom Out</button>
+        <button onclick="alert('Fullscreen')" class="w-full px-4 py-2 hover:bg-gray-100">Fullscreen</button>
+      </div>
+    </div>
+    <div class="relative group">
+      <button class="px-3 py-1 bg-blue-700 rounded hover:bg-blue-600">Settings</button>
+      <div class="hidden absolute group-hover:block bg-white text-gray-700 mt-1 rounded shadow-md w-40 z-10">
+        <button onclick="alert('Theme Settings')" class="w-full px-4 py-2 hover:bg-gray-100">Theme</button>
+        <button onclick="alert('Adjust Font Size')" class="w-full px-4 py-2 hover:bg-gray-100">Font Size</button>
+        <button onclick="alert('Preferences')" class="w-full px-4 py-2 hover:bg-gray-100">Preferences</button>
+      </div>
+    </div>
+    <div class="relative group">
+      <button class="px-3 py-1 bg-blue-700 rounded hover:bg-blue-600">Help</button>
+      <div class="hidden absolute group-hover:block bg-white text-gray-700 mt-1 rounded shadow-md w-40 z-10">
+        <button onclick="alert('About')" class="w-full px-4 py-2 hover:bg-gray-100">About</button>
+        <button onclick="alert('Support')" class="w-full px-4 py-2 hover:bg-gray-100">Support</button>
+        <button onclick="alert('Documentation')" class="w-full px-4 py-2 hover:bg-gray-100">Documentation</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white p-4 rounded-lg shadow mb-6 flex flex-wrap items-center gap-3">
+    <button onclick="recallFromVotebook()"
+      class="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-md text-sm">
+      Recall from Votebook
+    </button>
+
+    <label class="text-sm flex items-center gap-2">
+      Head No.:
+      <select id="headFilter" onchange="applyFilters()" class="border rounded-md px-2 py-1 text-sm">
+        <option value="">All</option>
+      </select>
+    </label>
+
+    <label class="text-sm flex items-center gap-2">
+      Type:
+      <select id="typeFilter" onchange="applyFilters()" class="border rounded-md px-2 py-1 text-sm">
+        <option value="">All</option>
+        <option>New</option>
+        <option>Ongoing</option>
+      </select>
+    </label>
+
+    <label class="text-sm flex items-center gap-2">
+      Beneficiary:
+      <select id="beneficiaryFilter" onchange="applyFilters()" class="border rounded-md px-2 py-1 text-sm">
+        <option value="">All</option>
+      </select>
+    </label>
+
+    <button onclick="toggleSelectToPrint()"
+      class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm">
+      Select to Print
+    </button>
+    <button id="printSelectedBtn" onclick="printSelectedRows()"
+      class="hidden px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">
+      Print Selected
+    </button>
+    <button onclick="applyFilters()" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md text-sm">
+      Reset Table
+    </button>
+  </div>
+
+  <!-- Budget Performance Table -->
+  <div class="overflow-x-auto bg-white rounded-lg shadow">
+    <table id="performanceTable" class="min-w-full border-collapse text-sm">
+      <thead class="bg-blue-900 text-white">
+        <tr>
+          <th id="selectHeader" class="px-3 py-2 text-left hidden">✓</th>
+          <th class="px-3 py-2 text-left">S/N</th>
+          <th class="px-3 py-2 text-left">Head No.</th>
+          <th class="px-3 py-2 text-left">Contract Name</th>
+          <th class="px-3 py-2 text-left">Type</th>
+          <th class="px-3 py-2 text-right">Amount Authorized</th>
+          <th class="px-3 py-2 text-left">Beneficiary</th>
+          <th class="px-3 py-2 text-right">Warrant</th>
+          <th class="px-3 py-2 text-right">Amount Utilized</th>
+          <th class="px-3 py-2 text-right">Balance</th>
+          <th class="px-3 py-2 text-right">% Utilization</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody" class="divide-y divide-gray-200"></tbody>
+      <tfoot class="bg-blue-50 font-semibold"></tfoot>
+    </table>
+  </div>
+
+</main>
+{% endblock %}
