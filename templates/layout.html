@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard</title>
+  <title>{% block title %}{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <link rel="shortcut icon" href="{% static 'images/logo.jpg' %}" />
@@ -72,7 +72,7 @@
               </a>
             </li>
             <li>
-              <a href="{% url 'reports' %}" class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+              <a href="{% url 'payment_register' %}" class="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
                 <!-- <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 3h18v18H3z"/></svg> -->
                 💳<span x-show="!collapsed" class="truncate"> Payment Register</span>
               </a>

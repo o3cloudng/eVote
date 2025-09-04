@@ -1,0 +1,212 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}Payment Register{% endblock %}
+{% block head %}Payment Register{% endblock %}
+
+{% block content %}
+<!-- Overlay for mobile -->
+<div x-show="sidebarOpen" @click="sidebarOpen = false" class="fixed inset-0 bg-black/30 z-30 md:hidden"></div>
+
+<!-- Main content -->
+<main class="flex-1 p-6 md:p-8">
+  {% with head="Payment Register" short_message="Manage and track all payments here." %}
+    {% include "header.html" %}
+  {% endwith %}
+
+  <!-- Back button -->
+  <a href="{% url 'budget' %}"
+    class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-sm rounded-md mb-4">
+    ← Back
+  </a>
+
+  <!-- Top menu bar -->
+  <div class="flex flex-wrap gap-2 bg-blue-800 text-white px-4 py-2 rounded-md shadow mb-4">
+    <div class="relative group">
+      <button class="px-3 py-1 bg-blue-700 rounded hover:bg-blue-600">📁 File</button>
+      <div class="hidden absolute group-hover:block bg-white text-gray-700 mt-1 rounded shadow-md w-40 z-10">
+        <button onclick="addRow()" class="w-full text-left px-4 py-2 hover:bg-gray-100">➕ New</button>
+        <button onclick="saveData()" class="w-full text-left px-4 py-2 hover:bg-gray-100">💾 Save</button>
+        <button onclick="exportExcel()" class="w-full text-left px-4 py-2 hover:bg-gray-100">📤 Export Excel</button>
+        <button onclick="window.print()" class="w-full text-left px-4 py-2 hover:bg-gray-100">🖨️ Print</button>
+      </div>
+    </div>
+    <div class="relative group">
+      <button class="px-3 py-1 bg-blue-700 rounded hover:bg-blue-600">✏️ Edit</button>
+      <div class="hidden absolute group-hover:block bg-white text-gray-700 mt-1 rounded shadow-md w-40 z-10">
+        <button onclick="loadData()" class="w-full px-4 py-2 hover:bg-gray-100">♻ Recall</button>
+        <button onclick="clearTable()" class="w-full px-4 py-2 hover:bg-gray-100">🧹 Clear</button>
+      </div>
+    </div>
+    <div class="relative group">
+      <button class="px-3 py-1 bg-blue-700 rounded hover:bg-blue-600">🧭 View</button>
+      <div class="hidden absolute group-hover:block bg-white text-gray-700 mt-1 rounded shadow-md w-40 z-10">
+        <button onclick="toggleSidebar()" class="w-full px-4 py-2 hover:bg-gray-100">📂 Toggle Sidebar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search and Back -->
+  <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+    <button onclick="window.location.href='#'"
+      class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-sm rounded-md">
+      ⬅ Back
+    </button>
+    <div>
+      <input type="text" id="searchInput" placeholder="Search..."
+        class="border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        onkeyup="filterTable()" />
+    </div>
+  </div>
+
+  <!-- Payment Register Table -->
+  <div class="overflow-x-auto bg-white rounded-lg shadow">
+    <table id="paymentTable" class="min-w-full border-collapse text-sm">
+      <thead class="bg-blue-900 text-white">
+        <tr>
+          <th class="px-3 py-2 text-left">S/N</th>
+          <th class="px-3 py-2 text-left">Date</th>
+          <th class="px-3 py-2 text-left">Contractor/Beneficiary</th>
+          <th class="px-3 py-2 text-left">PV/No.</th>
+          <th class="px-3 py-2 text-left">Description</th>
+          <th class="px-3 py-2 text-left">Payment Ref. No.</th>
+          <th class="px-3 py-2 text-right">Amount</th>
+          <th class="px-3 py-2 text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot class="bg-blue-50 font-semibold">
+        <tr>
+          <td colspan="6" class="px-3 py-2 text-right">Total</td>
+          <td id="totalAmount" class="px-3 py-2 text-right">0.00</td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <!-- Buttons -->
+  <div class="flex justify-end flex-wrap gap-2 mt-4">
+    <button onclick="addRow()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm">Add Row</button>
+    <button onclick="saveData()" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm">Save</button>
+    <button onclick="loadData()" class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-md text-sm">Recall</button>
+    <button onclick="clearTable()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm">Clear</button>
+    <button onclick="exportExcel()" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm">Export Excel</button>
+    <button onclick="window.print()" class="px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white rounded-md text-sm">Export PDF</button>
+  </div>
+</main>
+
+<!-- Scripts -->
+<script>
+  const table = document.querySelector("#paymentTable tbody");
+
+  function addRow(data = {}) {
+    const row = table.insertRow();
+    row.innerHTML = `
+      <td></td>
+      <td><input type="date" value="${data.date || ''}" class="border px-2 py-1 rounded"/></td>
+      <td><textarea class="border px-2 py-1 rounded w-40">${data.beneficiary || ''}</textarea></td>
+      <td><input type="text" maxlength="9" value="${data.pvno || ''}" class="border px-2 py-1 rounded w-20"/></td>
+      <td><textarea class="border px-2 py-1 rounded w-48">${data.description || ''}</textarea></td>
+      <td><input type="text" maxlength="25" value="${data.refno || ''}" class="border px-2 py-1 rounded w-32"/></td>
+      <td><input type="text" value="${data.amount || ''}" class="border px-2 py-1 rounded w-24 text-right" oninput="formatAmount(this); updateTotal()"/></td>
+      <td class="text-center">
+        <button onclick="deleteRow(this)" class="px-2 py-1 bg-red-500 text-white rounded text-xs">Delete</button>
+        <button onclick="editRow(this)" class="px-2 py-1 bg-yellow-500 text-white rounded text-xs">Edit</button>
+      </td>
+    `;
+    updateSN();
+    updateTotal();
+  }
+
+  function updateSN() {
+    Array.from(table.rows).forEach((row, i) => {
+      row.cells[0].textContent = i + 1;
+    });
+  }
+
+  function formatAmount(input) {
+    let value = input.value.replace(/[^0-9.]/g, '');
+    if (value) {
+      let parts = value.split('.');
+      parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      input.value = parts.join('.');
+    }
+  }
+
+  function updateTotal() {
+    let total = 0;
+    Array.from(table.rows).forEach(row => {
+      const amt = row.cells[6].querySelector("input").value.replace(/,/g, '');
+      total += parseFloat(amt) || 0;
+    });
+    document.getElementById("totalAmount").textContent = total.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+  }
+
+  function deleteRow(btn) {
+    btn.closest("tr").remove();
+    updateSN();
+    updateTotal();
+  }
+
+  function editRow(btn) {
+    if (confirm("Admin access required to edit. Proceed?")) {
+      const row = btn.closest("tr");
+      row.querySelectorAll("input, textarea").forEach(el => el.removeAttribute("disabled"));
+    }
+  }
+
+  function saveData() {
+    const rows = Array.from(table.rows);
+    const data = rows.map(row => ({
+      date: row.querySelector('input[type="date"]')?.value || '',
+      beneficiary: row.querySelector('textarea')?.value || '',
+      pvno: row.querySelector('input[type="text"]:nth-of-type(1)')?.value || '',
+      description: row.querySelector('textarea:nth-of-type(2)')?.value || '',
+      refno: row.querySelector('input[maxlength="25"]')?.value || '',
+      amount: row.querySelector('input.text-right')?.value.replace(/,/g, '') || ''
+    }));
+    localStorage.setItem("paymentRegister", JSON.stringify(data));
+    alert("Saved!");
+  }
+
+  function loadData() {
+    const data = JSON.parse(localStorage.getItem("paymentRegister") || "[]");
+    table.innerHTML = "";
+    data.forEach(addRow);
+    updateTotal();
+  }
+
+  function clearTable() {
+    if (confirm("Clear the register?")) {
+      table.innerHTML = "";
+      updateTotal();
+    }
+  }
+
+  function exportExcel() {
+    let tableClone = document.getElementById("paymentTable").cloneNode(true);
+    tableClone.querySelectorAll("button").forEach(el => el.remove());
+    let html = tableClone.outerHTML;
+    let uri = 'data:application/vnd.ms-excel;base64,';
+    let base64 = s => window.btoa(unescape(encodeURIComponent(s)));
+    let link = document.createElement("a");
+    link.href = uri + base64(html);
+    link.download = "Payment_Register.xls";
+    link.click();
+  }
+
+  function filterTable() {
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    Array.from(table.rows).forEach(row => {
+      row.style.display = [...row.cells].some(td =>
+        td.textContent.toLowerCase().includes(input)
+      ) ? '' : 'none';
+    });
+  }
+
+  window.onload = loadData;
+</script>
+{% endblock %}

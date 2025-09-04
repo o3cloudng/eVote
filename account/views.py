@@ -98,6 +98,9 @@ def logout(request):
 def budget(request):
     return render(request, 'users/budget.html')
 
+def payment_register(request):
+    return render(request, 'users/payment_register.html')
+
 
 
 # @login_required

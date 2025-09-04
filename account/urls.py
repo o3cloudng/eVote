@@ -1,6 +1,6 @@
 from django.urls import path
 from account.views import userlogin, signup, forgot_password, dashboard, profile, \
-        usersettings, users, reports, logout, budget
+        usersettings, users, reports, logout, budget, payment_register
 
 urlpatterns = [
     # path('login/', userlogin, name="login"),
@@ -12,4 +12,5 @@ urlpatterns = [
     path('reports/', reports, name="reports"),
     path('logout/', logout, name="logout"),
     path('budget/', budget, name="budget"),
+    path('payment_register/', payment_register, name="payment_register"),
 ]
